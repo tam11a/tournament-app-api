@@ -46,7 +46,8 @@ app.get("/", function (req, res) {
 	res.redirect("/doc");
 });
 
-// App Routes Here
+// App Routes
+app.use("/api/auth", require("./routes/auth"));
 
 // Add Swagger UI to Home Page
 app.use("/doc", swaggerUi.serve, swaggerUi.setup(swaggerJSDoc(swaggerOptions)));

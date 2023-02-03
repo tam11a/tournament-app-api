@@ -18,10 +18,14 @@
   },
   "homepage": "https://github.com/tam11a/tournament-app-api#readme",
   "dependencies": {
+    "base32": "0.0.7",
+    "bcryptjs": "2.4.3",
     "cors": "2.8.5",
     "dotenv": "16.0.3",
     "express": "4.18.2",
+    "jsonwebtoken": "9.0.0",
     "mongoose": "6.8.4",
+    "otplib": "12.0.1",
     "swagger-jsdoc": "6.2.8",
     "swagger-ui-express": "4.6.0"
   },
