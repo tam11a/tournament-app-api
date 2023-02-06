@@ -1,5 +1,5 @@
 const express = require("express");
-const { register, verify, validate, login } = require("../controllers/auth");
+const { register, verify, validate, login, forgetpassword, resetpassword } = require("../controllers/auth");
 const { protect } = require("../middleware/auth");
 const router = express.Router();
 
@@ -111,5 +111,9 @@ router.route("/validate").get(protect, validate);
  *
  */
 router.route("/login").post(login);
+
+
+// admin auth routes
+router.use('/admin', require('./admin'))
 
 module.exports = router;
