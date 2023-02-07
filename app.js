@@ -48,6 +48,8 @@ app.get("/", function (req, res) {
 
 // App Routes
 app.use("/api/auth", require("./routes/auth"));
+app.use("/api/attachments", require("./routes/attachment"));
+app.use("/api/games", require("./routes/games"));
 
 // Add Swagger UI to Home Page
 app.use("/doc", swaggerUi.serve, swaggerUi.setup(swaggerJSDoc(swaggerOptions)));

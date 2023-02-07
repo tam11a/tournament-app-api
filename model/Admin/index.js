@@ -11,22 +11,22 @@ var adminSchema = new mongoose.Schema(
 			required: [true, "Please Provide an Username"], // If Required
 			trim: true,
 		},
-		phone: {
-			type: String,
-			validate: [/01\d{9}$/, "Invalid Phone Number"],
-			required: [true, "Please Provide a Phone Number"],
-			unique: [true, "Phone Number is already registered"],
-		},
-		// email: {
-		//   type: String,
-		//   required: [true, "Please Provide an Email Address"],
-		//   unique: [true, "Email is already resigtered"], // One Account with One Email
-		//   match: [
-		//     /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/,
-		//     "Invalid Email Address",
-		//   ],
-		//   trim: true,
+		// phone: {
+		// 	type: String,
+		// 	validate: [/01\d{9}$/, "Invalid Phone Number"],
+		// 	required: [true, "Please Provide a Phone Number"],
+		// 	unique: [true, "Phone Number is already registered"],
 		// },
+		email: {
+		  type: String,
+		  required: [true, "Please Provide an Email Address"],
+		  unique: [true, "Email is already resigtered"], // One Account with One Email
+		  match: [
+		    /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/,
+		    "Invalid Email Address",
+		  ],
+		  trim: true,
+		},
 		avatarUrl: {
 			type: String,
 			trim: true,
@@ -45,7 +45,7 @@ var adminSchema = new mongoose.Schema(
 		isVerified: {
 			type: Boolean,
 			required: true,
-			default: false,
+			default: true,
 		},
 		isActive: {
 			type: Boolean,
@@ -94,17 +94,18 @@ module.exports = Admin;
  *     type: object
  *     required:
  *        - userName
- *        - phone
+ *        - email
  *        - password
  *     properties:
  *       userName:
  *         type: string
  *         unique: true
  *         maxLength: 11
- *       phone:
+ *       email:
  *         type: string
  *         unique: true
- *         pattern: 01\d{9}$
+ *         pattern: ^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$
+ *         default: admin@email.com
  *       avatarUrl:
  *         type: string
  *       image:
