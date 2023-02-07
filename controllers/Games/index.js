@@ -1,5 +1,7 @@
 const { default: mongoose } = require("mongoose");
+const Attachment = require("../../model/Attachment");
 const Games = require("../../model/Games");
+const gamesImage = require("../../model/GamesImage");
 const ErrorResponse = require("../../utils/errorResponse");
 const { queryObjectBuilder, fieldsQuery } = require("../../utils/fieldsQuery");
 
@@ -9,8 +11,8 @@ exports.createGames = async (req, res, next) => {
     const { gameName, image, description } = req.body;
 
     try {
-        // Store Games to DB
-        const user = await Games.create({
+        // Store image to DB
+        const user = await image.create({
             gameName,
             description,
             image
@@ -18,7 +20,7 @@ exports.createGames = async (req, res, next) => {
 
         res.status(201).json({
             success: true,
-            message: "Games created successfully",
+            message: "image created successfully",
             data: user,
         })
 
@@ -142,13 +144,13 @@ exports.activeInactive = async (req, res, next) => {
     const { games_id } = req.params;
 
     if (!games_id || !mongoose.Types.ObjectId.isValid(games_id))
-        return next(new ErrorResponse("Please provide valid Games id", 400));
+        return next(new ErrorResponse("Please provide valid image id", 400));
 
     try {
-        // Update Games to DB
+        // Update image to DB
         const game = await Games.findById(games_id);
 
-        if (!game) return next(new ErrorResponse("No Games found", 404));
+        if (!game) return next(new ErrorResponse("No image found", 404));
 
         await game.updateOne({
             isActive: !game.isActive,
@@ -157,8 +159,96 @@ exports.activeInactive = async (req, res, next) => {
 
         res.status(200).json({
             success: true,
-            message: `Games ${game.isActive ? "deactivated" : "activated"
+            message: `image ${game.isActive ? "deactivated" : "activated"
                 } successfully`,
+        });
+
+        // On Error
+    } catch (error) {
+        // Send Error Response
+        next(error);
+    }
+};
+
+exports.imagesByID = async (req, res, next) => {
+    // Get Values
+    const { games_id } = req.params;
+
+    // mongoose.Types.ObjectId.isValid(id)
+    if (!games_id || !mongoose.Types.ObjectId.isValid(games_id))
+        return next(new ErrorResponse("Please provide valid game id", 400));
+
+    try {
+        res.status(200).json({
+            success: true,
+            data: await gamesImage.find({
+                games: games_id,
+            }).select("-games"),
+        });
+
+        // On Error
+    } catch (error) {
+        // Send Error Response
+        next(error);
+    }
+};
+
+exports.saveImages = async (req, res, next) => {
+    // Get Values
+    const { games_id } = req.params;
+
+    // mongoose.Types.ObjectId.isValid(id)
+    if (!games_id || !mongoose.Types.ObjectId.isValid(games_id))
+        return next(new ErrorResponse("Please provide valid category id", 400));
+
+    let attachmentList = req.files
+        ? req.files.map((file) => {
+            return {
+                mimetype: file.mimetype,
+                filename: file.filename,
+                size: file.size,
+            };
+        })
+        : [];
+
+    if (!attachmentList.length)
+        return next(new ErrorResponse("No attachments added", 404));
+
+    try {
+        const attachment = await Attachment.insertMany(attachmentList);
+        await gamesImage.insertMany(
+            Array.from(attachment, (per) => {
+                return {
+                    image: per._id.toString(),
+                    games: games_id,
+                };
+            })
+        );
+
+        res.status(201).json({
+            success: true,
+            message: "Attachments uploaded successfully",
+        });
+    } catch (error) {
+        // On Error
+        // Send Error Response
+        next(error);
+    }
+};
+
+exports.delImage = async (req, res, next) => {
+    const { image_id } = req.params;
+
+    if (!image_id || !mongoose.Types.ObjectId.isValid(image_id))
+        return next(new ErrorResponse("Please provide valid image id", 400));
+
+    try {
+        // const imageInfo =
+        await gamesImage.findByIdAndDelete(image_id);
+        // await Attachment.findByIdAndDelete(imageInfo.image);
+        res.status(200).json({
+            success: true,
+            message: "Image deleted successfully",
         });
 
         // On Error
