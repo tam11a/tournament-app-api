@@ -1,8 +1,8 @@
 const mongoose = require("mongoose");
-// const slug = require("mongoose-slug-generator");
+const slug = require("mongoose-slug-generator");
 // const { MongooseFindByReference } = require("mongoose-find-by-reference");
-// const mongoosePaginate = require("mongoose-paginate-v2");
-// const { mongooseSubqueryPlugin } = require("mongoose-subquery");
+const mongoosePaginate = require("mongoose-paginate-v2");
+const { mongooseSubqueryPlugin } = require("mongoose-subquery");
 
 mongoose
   .connect(process.env.MONGO_DB, {
@@ -15,9 +15,9 @@ mongoose
 
 // mongoose.set("debug", true);
 
-// mongoose.plugin(mongoosePaginate);
-// mongoose.plugin(mongooseSubqueryPlugin);
-// mongoose.plugin(slug);
+mongoose.plugin(mongoosePaginate);
+mongoose.plugin(mongooseSubqueryPlugin);
+mongoose.plugin(slug);
 // mongoose.plugin(MongooseFindByReference);
 
 module.exports = mongoose;
